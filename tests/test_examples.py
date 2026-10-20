@@ -1,11 +1,12 @@
-"""Checks every TV list in examples/ and the two tables that index them.
+"""Checks TV lists, their dedicated index, and README assets and links.
 
 Run from the repository root: python3 -m unittest discover -s tests -v
 """
-import os
 import re
+import struct
 from pathlib import Path
 import unittest
+from urllib.parse import unquote, urlsplit
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -67,21 +68,32 @@ class ExampleListsTest(unittest.TestCase):
                          "examples/README.md rows and examples/ folders differ")
         self.assertEqual(len(listed), len(set(listed)), "a folder is listed twice")
 
-    def test_readme_table_has_one_row_per_list(self):
-        readme_rows = table_rows(ROOT / "README.md", "| TV | OS |")
-        example_rows = table_rows(EXAMPLES / "README.md", "| Folder |")
-        self.assertEqual(len(readme_rows), len(example_rows),
-                         "README.md TV table and examples/README.md have a different number of rows")
-        readme_tvs = sorted(r.split("|")[1].strip() for r in readme_rows)
-        example_tvs = sorted(r.split("|")[2].strip() for r in example_rows)
-        self.assertEqual(readme_tvs, example_tvs, "the TV column differs between the two tables")
 
-    @unittest.skipUnless(os.environ.get("CLEANYOURTV_STRICT"), "counts are fixed up on merge; strict on main only")
-    def test_readme_counts(self):
+class ReadmeTest(unittest.TestCase):
+    def test_local_links_exist(self):
         text = (ROOT / "README.md").read_text(encoding="utf-8")
-        n = len(folders())
-        self.assertIn(f"{n} TV lists", text, "nav link count is stale")
-        self.assertIn(f"{n} TVs tested", text, "numbers line is stale")
+        links = re.findall(r"!?\[[^\]]*\]\(([^\s)]+)\)", text)
+        self.assertTrue(links, "README has no links")
+        for link in links:
+            url = urlsplit(link)
+            if not url.scheme and not url.netloc and url.path:
+                with self.subTest(link=link):
+                    self.assertTrue((ROOT / unquote(url.path)).exists(), "broken local link")
+
+    def test_screenshots_are_local_pngs_in_markdown_and_html(self):
+        text = (ROOT / "README.md").read_text(encoding="utf-8")
+        html = (ROOT / "README.html").read_text(encoding="utf-8")
+        images = re.findall(r"!\[[^\]]*\]\(([^\s)]+)\)", text)
+        self.assertTrue(images, "README needs an application screenshot")
+        for image in images:
+            with self.subTest(image=image):
+                data = (ROOT / image).read_bytes()
+                self.assertEqual(data[:8], b"\x89PNG\r\n\x1a\n")
+                self.assertEqual(data[12:16], b"IHDR")
+                width, height = struct.unpack(">II", data[16:24])
+                self.assertGreater(width, 0)
+                self.assertGreater(height, 0)
+                self.assertIn(f'src="{image}"', html, "HTML screenshot is missing")
 
 
 if __name__ == "__main__":
