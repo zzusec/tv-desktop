@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Contributing - TV Desktop</title><style>body{max-width:68rem;margin:2.5rem auto;padding:0 1.25rem;color:#202624;background:#fafbf8;font:17px/1.8 Georgia,"Songti SC",serif}h1,h2,h3{line-height:1.35}h2{margin-top:2rem}a{color:#175b58}code{font-family:Menlo,monospace;font-size:.85em;overflow-wrap:anywhere}pre{padding:1rem;background:#edf1eb;white-space:pre-wrap;overflow-wrap:anywhere;border-radius:6px}table{display:block;overflow:auto;border-collapse:collapse;max-width:100%}td,th{border:1px solid #bfc9c0;padding:.4rem .65rem;text-align:left}img{max-width:100%;height:auto}li{margin:.4rem 0}@media print{body{margin:0;max-width:none;background:white;font-size:10.5pt}h1,h2,h3{break-after:avoid}pre,tr{break-inside:avoid}table{display:table;font-size:9pt}a{color:inherit}}</style></head><body><main>
+<h1>Contributing</h1>
+<p>TV Desktop is maintained at <a href="https://github.com/zzusec/tv-desktop">zzusec/tv-desktop</a>, based on
+<a href="https://github.com/Gathin23/cleanyourtv">CleanYourTV</a>. Send issues and pull requests for this
+version to TV Desktop, not the upstream author. Keep Android 4.4 / API 19 compatibility,
+preserve in-app Back navigation, and do not weaken the launcher handover and rollback checks.
+Report exactly which devices were tested; do not imply that every inherited TV profile was
+tested on this version. The inherited contribution guide follows.</p>
+<p>Thanks for helping more TVs lose their ads. Three kinds of contributions are especially welcome.</p>
+<h2>1. Add your TV model</h2>
+<p>Every brand ships different bloat. If you ran the prompt (or did it by hand) on a TV that isn't in
+<code>examples/</code>, add it:</p>
+<ol>
+<li>Create <code>examples/&lt;brand&gt;-&lt;model&gt;/debloat.txt</code>. Copy the format from
+   <code>examples/xiaomi-mi-tv-4a/debloat.txt</code>: one package per line, grouped with a comment that says
+   what the group is, and a trailing comment on anything non-obvious ("re-enable for firmware
+   updates", "needed for HDMI-CEC", etc.).</li>
+<li>Put the exact model name, Android version and firmware build in the header so people can tell
+   whether it matches theirs. <code>tools/tv.py --probe</code> prints all three.</li>
+<li>Only list packages you have actually disabled and lived with for a few days. Note anything that
+   broke and what you re-enabled.</li>
+<li>Add a row to <code>examples/README.md</code>.</li>
+<li>If your TV's Live TV app or stock launcher has a different package name, say so in the header;
+   <code>tools/restore.sh</code> and <code>launcher/build-and-install.sh</code> accept them as arguments.</li>
+</ol>
+<p>Never list packages to <em>uninstall</em>. Everything in this repo disables with <code>pm disable-user</code>, which
+is reversible from the TV's own settings if the tools are gone.</p>
+<h2>2. Improve the launcher</h2>
+<p>The launcher lives in <code>launcher/</code> and is deliberately small: plain Java, AndroidX RecyclerView and
+DynamicAnimation, no Kotlin, no Compose, no network. It targets TVs with 1 GB of RAM, so:</p>
+<ul>
+<li>No blur, no video backgrounds, no polling, no background services.</li>
+<li>Anything that depends on a specific TV goes in <code>app/src/main/res/values/config.xml</code>, not in code.</li>
+<li>Keep D-pad navigation deterministic. Test Up/Down/Left/Right from every edge.</li>
+<li>Verify on a real TV, not only the emulator. The easiest way is remote key injection plus a
+  screenshot: <code>tools/tv.py 'input keyevent KEYCODE_DPAD_DOWN; screencap -p /sdcard/s.png'</code> then
+  <code>tools/tv.py --pull /sdcard/s.png s.png</code>. Include a screenshot in your pull request.</li>
+</ul>
+<p>Build with <code>TV_HOST=&lt;ip&gt; launcher/build-and-install.sh</code> (JDK 17, Android SDK platform 34 and
+build-tools 34.0.0; on macOS <code>brew install openjdk@17 android-commandlinetools</code> then
+<code>sdkmanager "platforms;android-34" "build-tools;34.0.0"</code>; with the newer command-line tools the form is
+<code>android sdk install platforms/android-34 build-tools/34.0.0</code>).</p>
+<p>Ideas that fit the direction: an idle screensaver with clock and ambient colour, per-TV icon packs
+for apps without banners, a settings screen to edit the dock from the TV, localisation.
+Ideas that don't: recommendation rows, content feeds, ads, telemetry.</p>
+<h2>3. Improve the prompt and tools</h2>
+<p><code>PROMPT.md</code> is what most people will actually use. If your assistant got stuck somewhere, the fix
+usually belongs in the prompt as one extra sentence, not in a script. Keep it brand-neutral; put
+brand-specific knowledge in <code>examples/</code>.</p>
+<p><code>tools/tv.py</code> and <code>tools/b64push.py</code> exist because the stock <code>adb</code> is blocked on recent macOS. If
+you find a cleaner workaround, open an issue first.</p>
+<h2>4. Show what you built</h2>
+<p>Built your own launcher, a port to another platform, or an add-on that is too big or too personal
+for the shared launcher? Put it in its own repository and add one row to
+<a href="SHOWCASE.md"><code>SHOWCASE.md</code></a>. That page is the place for alternative launchers, forks with a
+different look, and tools around the launcher; this repo keeps one small reference launcher and
+points at everything else. The rules for a row are on that page.</p>
+<p>Things that stay in this repo: debloat lists, fixes and small, opt-in features for the reference
+launcher, prompt and tool improvements. Things that go in the showcase: a second launcher, a
+restyle, a platform port, anything with its own background services or network access.</p>
+<h2>Pull requests</h2>
+<ul>
+<li>One topic per PR. Small is fine.</li>
+<li>Say which TV you tested on.</li>
+<li>No new dependencies in the launcher without discussing it in an issue.</li>
+<li>Be kind in reviews. Most contributors here are doing this for their parents.</li>
+</ul>
+<p>By contributing you agree your work is released under the repo's MIT licence.</p>
+</main></body></html>

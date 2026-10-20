@@ -47,5 +47,6 @@ jobs:
       - name: The launcher stays small
         run: |
           size=$(stat -c %s launcher/app/build/outputs/apk/release/app-release.apk)
-          echo "release APK: $((size / 1024)) KB"
-          test "$size" -lt 409600 || { echo "APK is over 400 KB; the launcher targets 1 GB TVs, keep it small"; exit 1; }
+          echo "release APK: $((size / 1024)) KiB"
+          # API 19 support includes static fonts and density-specific PNG fallbacks.
+          test "$size" -lt 460800 || { echo "APK is over 450 KiB; the launcher targets 1 GB TVs, keep it small"; exit 1; }

@@ -1,5 +1,12 @@
 # Contributing
 
+TV Desktop is maintained at [zzusec/tv-desktop](https://github.com/zzusec/tv-desktop), based on
+[CleanYourTV](https://github.com/Gathin23/cleanyourtv). Send issues and pull requests for this
+version to TV Desktop, not the upstream author. Keep Android 4.4 / API 19 compatibility,
+preserve in-app Back navigation, and do not weaken the launcher handover and rollback checks.
+Report exactly which devices were tested; do not imply that every inherited TV profile was
+tested on this version. The inherited contribution guide follows.
+
 Thanks for helping more TVs lose their ads. Three kinds of contributions are especially welcome.
 
 ## 1. Add your TV model

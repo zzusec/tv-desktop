@@ -11,8 +11,8 @@ to a tweet. Keep it like that.
   hurt anyone.
 - Say what you tested on. Specifics ("Android TV 11, build RTT1, Hisense A4") help; verdicts
   ("doesn't work") do not.
-- Respect the maintainers' decisions on scope. The launcher stays small, offline and without
-  prebuilt binaries; if your idea does not fit, a fork with a SHOWCASE row is a good outcome, not a
+- Respect the maintainers' decisions on scope. The launcher stays small and offline;
+  if your idea does not fit, a fork with a SHOWCASE row is a good outcome, not a
   rejection of you.
 
 ## Not accepted
@@ -28,9 +28,10 @@ to a tweet. Keep it like that.
 ## Enforcement
 
 Maintainers may edit, hide or remove content and block accounts that break these rules, with a
-short explanation. To report something, open an issue, or if it is private, message
-[@gathint on X](https://x.com/gathint). Reports are read by the maintainer and handled within a
-few days.
+short explanation. Report public concerns to the
+[TV Desktop maintainers](https://github.com/zzusec/tv-desktop/issues). For security-sensitive
+reports, use [private vulnerability reporting](https://github.com/zzusec/tv-desktop/security/advisories/new).
+Do not include secrets or device identifiers in a public issue.
 
 This is a short, plain-language code adapted in spirit from the
 [Contributor Covenant](https://www.contributor-covenant.org/version/2/1/code_of_conduct/).
