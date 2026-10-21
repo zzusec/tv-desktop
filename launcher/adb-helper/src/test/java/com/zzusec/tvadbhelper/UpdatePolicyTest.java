@@ -7,6 +7,10 @@ import java.io.IOException;
 import static org.junit.Assert.*;
 
 public class UpdatePolicyTest {
+    @Test public void legacyInstallersRequireFileUrisUntilNougat() {
+        for (int api : new int[] {19, 20, 21, 22, 23}) assertTrue(UpdatePolicy.usesFileInstaller(api));
+        for (int api : new int[] {24, 26, 34}) assertFalse(UpdatePolicy.usesFileInstaller(api));
+    }
     private static final String URL = "https://github.com/zzusec/tv-desktop/releases/download/v1/helper.apk";
     private static final String HASH = "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef";
     private static final byte[][] CERTS = {{1, 2, 3}, {4, 5, 6}};

@@ -44,7 +44,7 @@ adb -s "$TV" shell am start -n com.gathin.tvhome/.MainActivity
 
 ### 独立 ADB 诊断助手
 
-另提供适配 Android 4.4 起的 [TV ADB 助手](launcher/adb-helper/README.md)：支持遥控器操作，检查调试属性、进程及本机 ADB 协议，提供受系统权限约束的开启尝试。它不替换桌面，也不能绕过权限保证开启 ADB；支持手动开启只读 HTTP 诊断页面与经哈希/签名校验的在线升级（电视确认安装）；1.0 首次升到 1.1 仍需 U 盘覆盖安装。下载及限制见该模块说明。
+另提供适配 Android 4.4 起的 [TV ADB 助手](launcher/adb-helper/README.md)：支持遥控器操作，检查调试属性、进程及本机 ADB 协议，提供受系统权限约束的开启尝试。它不替换桌面，也不能绕过权限保证开启 ADB；支持手动开启只读 HTTP 诊断页面与经哈希/签名校验的在线升级（电视确认安装）；1.0 首次升到 1.1.1 仍需 U 盘覆盖安装。下载及限制见该模块说明。
 
 ### 桌面与助手构建
 

@@ -63,7 +63,7 @@ public final class MainActivity extends Activity {
         root.setPadding(dp(28), dp(20), dp(28), dp(20));
         root.setBackground(new GradientDrawable(GradientDrawable.Orientation.TL_BR,
                 new int[] {Color.rgb(16, 28, 36), Color.rgb(22, 44, 51)}));
-        root.addView(text(getString(R.string.app_name) + " 1.1", 27, Color.rgb(242, 241, 232)));
+        root.addView(text(getString(R.string.app_name) + " 1.1.1", 27, Color.rgb(242, 241, 232)));
         root.addView(text(getString(R.string.subtitle), 13, Color.rgb(174, 197, 201)));
 
         LinearLayout actions = new LinearLayout(this);
@@ -184,7 +184,7 @@ public final class MainActivity extends Activity {
         boolean securePermission = checkCallingOrSelfPermission(Manifest.permission.WRITE_SECURE_SETTINGS)
                 == PackageManager.PERMISSION_GRANTED;
         StringBuilder out = new StringBuilder();
-        out.append(getString(R.string.report_version, "1.1")).append('\n');
+        out.append(getString(R.string.report_version, "1.1.1")).append('\n');
         out.append(getString(R.string.report_time, DateFormat.getDateTimeInstance().format(new Date()))).append('\n');
         out.append(getString(R.string.report_device, Build.MODEL, Build.VERSION.RELEASE, Build.VERSION.SDK_INT));
         out.append('\n').append(getString(R.string.report_network,
@@ -400,10 +400,11 @@ public final class MainActivity extends Activity {
     private void openInstaller(File installFile) {
         try {
             Intent install = new Intent(Intent.ACTION_VIEW);
-            // KitKat's installer only accepts file/package schemes, unlike API 21+.
-            Uri uri = Build.VERSION.SDK_INT < 21 ? Uri.fromFile(installFile) : UpdateApkProvider.URI;
+            // Pre-Nougat installers require a readable file URI.
+            boolean legacy = UpdatePolicy.usesFileInstaller(Build.VERSION.SDK_INT);
+            Uri uri = legacy ? Uri.fromFile(installFile) : UpdateApkProvider.URI;
             install.setDataAndType(uri, "application/vnd.android.package-archive");
-            if (Build.VERSION.SDK_INT >= 21) {
+            if (!legacy) {
                 install.setClipData(ClipData.newRawUri("Verified helper update", uri));
                 install.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
             }

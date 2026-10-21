@@ -103,9 +103,9 @@ final class HelperUpdater {
         UpdatePolicy.validateRelease(release.versionCode, release.versionName, release.apkUrl, release.sha256);
         File cached = new File(context.getCacheDir(), "update/helper-update.apk");
         validateApk(cached, release);
-        if (Build.VERSION.SDK_INT >= 21) return cached;
+        if (!UpdatePolicy.usesFileInstaller(Build.VERSION.SDK_INT)) return cached;
 
-        // KitKat's installer accepts file: only, and cannot traverse our private cache.
+        // Pre-Nougat installers accept file: only, and cannot traverse our private cache.
         File external = context.getExternalFilesDir(null);
         if (external == null) throw new IOException("External storage unavailable for legacy installer");
         File directory = new File(external, "updates");

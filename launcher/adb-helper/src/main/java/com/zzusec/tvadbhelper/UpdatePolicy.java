@@ -13,6 +13,8 @@ final class UpdatePolicy {
 
     private UpdatePolicy() { }
 
+    static boolean usesFileInstaller(int api) { return api < 24; }
+
     static URL trustedUrl(String value) throws IOException {
         if (value == null || value.length() > 4096) throw new IOException("Invalid update URL length");
         try {

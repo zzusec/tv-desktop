@@ -32,7 +32,7 @@ adb -s &quot;$TV&quot; shell am start -n com.gathin.tvhome/.MainActivity
 <p>发布 APK 当前使用调试证书签名，供 ADB 侧载验证。自行构建会使用你本机的调试签名，不一定能覆盖安装已有版本；不要为解决签名冲突而贸然卸载正在使用的唯一桌面。ADB 私钥、签名私钥和设备备份不随源码发布。</p>
 <h2>从源码构建</h2>
 <h3>独立 ADB 诊断助手</h3>
-<p>另提供适配 Android 4.4 起的 <a href="launcher/adb-helper/README.md">TV ADB 助手</a>：支持遥控器操作，检查调试属性、进程及本机 ADB 协议，提供受系统权限约束的开启尝试。它不替换桌面，也不能绕过权限保证开启 ADB；支持手动开启只读 HTTP 诊断页面与经哈希/签名校验的在线升级（电视确认安装）；1.0 首次升到 1.1 仍需 U 盘覆盖安装。下载及限制见该模块说明。</p>
+<p>另提供适配 Android 4.4 起的 <a href="launcher/adb-helper/README.md">TV ADB 助手</a>：支持遥控器操作，检查调试属性、进程及本机 ADB 协议，提供受系统权限约束的开启尝试。它不替换桌面，也不能绕过权限保证开启 ADB；支持手动开启只读 HTTP 诊断页面与经哈希/签名校验的在线升级（电视确认安装）；1.0 首次升到 1.1.1 仍需 U 盘覆盖安装。下载及限制见该模块说明。</p>
 <h3>桌面与助手构建</h3>
 <p>需要 JDK 17、Android SDK platform 34 和 build-tools 34.0.0；Gradle Wrapper 已包含在仓库中。</p>
 <pre><code class="language-bash">git clone https://github.com/zzusec/tv-desktop.git

@@ -1,6 +1,6 @@
 {
-  "versionCode": 2,
-  "versionName": "1.1",
-  "apkUrl": "https://github.com/zzusec/tv-desktop/releases/download/adb-helper-v1.1/tv-adb-helper-1.1.apk",
-  "sha256": "2a16530c54fbe1f86ccf40acd535940cd06b4dfd235f40f23a5897bbda3ae8f3"
+  "versionCode": 3,
+  "versionName": "1.1.1",
+  "apkUrl": "https://github.com/zzusec/tv-desktop/releases/download/adb-helper-v1.1.1/tv-adb-helper-1.1.1.apk",
+  "sha256": "9acb9205de60e1bdd29c277cecd23b82d2959b155f7c2dc038ed2ed3dfa8aa1c"
 }
