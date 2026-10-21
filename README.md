@@ -42,6 +42,12 @@ adb -s "$TV" shell am start -n com.gathin.tvhome/.MainActivity
 
 ## 从源码构建
 
+### 独立 ADB 诊断助手
+
+另提供适配 Android 4.4 起的 [TV ADB 助手](launcher/adb-helper/README.md)：支持遥控器操作，检查调试属性、进程及本机 ADB 协议，提供受系统权限约束的开启尝试。它不替换桌面，也不能绕过权限保证开启 ADB；可通过 U 盘安装。下载及限制见该模块说明。
+
+### 桌面与助手构建
+
 需要 JDK 17、Android SDK platform 34 和 build-tools 34.0.0；Gradle Wrapper 已包含在仓库中。
 
 ```bash
@@ -54,7 +60,7 @@ CLEANYOURTV_STRICT=1 python3 -m unittest discover -s tests -v
 
 APK 位于 `launcher/app/build/outputs/apk/release/app-release.apk`。`JAVA_HOME` 和 `ANDROID_HOME` 应指向你本机的 JDK 与 SDK，不要提交 `launcher/local.properties`、ADB key、keystore 或电视状态备份。
 
-当前适配版本通过 64 项 JVM、18 项 Python、release 构建与 lint；lint 仍有既有警告。CI 同时检查构建、测试和 450 KiB 的 APK 体积预算。发现问题时请附机型、Android/固件版本和复现步骤，不要公开令牌、序列号或 ADB 密钥。
+桌面模块通过 64 项 JVM、仓库 18 项 Python、release 构建与 lint；独立 ADB 助手另通过 21 项 JVM、构建和 lint，但尚待电视端实机安装验证。lint 仍有警告。CI 同时检查构建、测试和桌面 450 KiB 的 APK 体积预算。发现问题时请附机型、Android/固件版本和复现步骤，不要公开令牌、序列号或 ADB 密钥。
 
 ## 许可与来源
 

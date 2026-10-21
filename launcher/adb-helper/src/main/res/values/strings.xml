@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">TV ADB 助手</string>
+    <string name="subtitle">本机诊断 · 不替换桌面 · 不 root · 不关闭 ADB 授权检查</string>
+    <string name="refresh">刷新诊断</string>
+    <string name="enable">尝试开启网络 ADB</string>
+    <string name="settings">打开系统调试设置</string>
+    <string name="working">正在读取电视本机状态…</string>
+    <string name="confirm_title">尝试开启局域网 ADB？</string>
+    <string name="confirm_message">将请求系统开启 ADB，并尝试设置网络调试端口 5555。仅当固件允许相应系统接口时才会生效，普通安装通常没有这些权限。不会申请 root、重启电视、切换桌面、清除调试授权或关闭身份验证。开启后仅在可信局域网使用，完成维护后关闭。</string>
+    <string name="confirm_enable">尝试开启</string>
+    <string name="cancel">取消</string>
+    <string name="status_auth">本机 ADB 已回应 AUTH，仍需电脑授权和局域网连接验证</string>
+    <string name="status_ready">本机 ADB 已回应 CNXN，仍需电脑连接验证</string>
+    <string name="status_tcp_only">本机端口开放，但尚未确认是可用的 ADB 服务</string>
+    <string name="status_closed">本机 5555 未能连接，不能报告 ADB 已开启</string>
+    <string name="status_error">诊断失败：%1$s</string>
+    <string name="report_header">诊断报告（方向键可进入下方区域滚动）</string>
+    <string name="report_device">设备：%1$s / Android %2$s / API %3$d</string>
+    <string name="report_network">本机地址：%1$s</string>
+    <string name="report_permission">WRITE_SECURE_SETTINGS：%1$s</string>
+    <string name="permission_granted">已授予；不代表拥有属性写入权限</string>
+    <string name="permission_denied">未授予；普通 APK 不能自行获取</string>
+    <string name="report_setting">系统 ADB 开关 adb_enabled = %1$s</string>
+    <string name="report_process">可见进程：%1$s</string>
+    <string name="report_probe">127.0.0.1:5555：%1$s</string>
+    <string name="report_attempts">本次开启请求的逐项结果：</string>
+    <string name="attempt_changed">[读回有变化，服务仍需验证] </string>
+    <string name="attempt_not_confirmed">[未证实变化] </string>
+    <string name="report_limits">重要：开关或属性为 1 不等于 ADB 可连接；本机协议回应也不等于 Mac 已连通。普通应用权限不足时，本工具只能诊断并引导进入系统设置，无法绕过权限强制开启 ADB。没有运行 su、stop/start adbd 或任何刷机命令。</string>
+    <string name="settings_unavailable">无法打开系统设置：%1$s</string>
+    <string name="settings_fallback">此固件没有开放开发者选项入口，已打开系统设置，请手动进入开发者选项。</string>
+</resources>

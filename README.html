@@ -5,7 +5,7 @@
 <ul>
 <li>源码与反馈：<a href="https://github.com/zzusec/tv-desktop">zzusec/tv-desktop</a></li>
 <li>APK 下载与校验文件：<a href="https://github.com/zzusec/tv-desktop/releases/latest">Releases</a></li>
-<li>旧系统适配与实测记录：<a href="docs/OLD-TVS.md">docs/OLD-TVS.md</a></li>
+<li>旧系统适配与实测记录：<a href="docs/OLD-TVS.html">docs/OLD-TVS.md</a></li>
 </ul>
 <h2>界面截图</h2>
 <p><img alt="TV Desktop 实机桌面：时钟、输入源、网络、设置与应用快捷入口" src="docs/screenshots/tv-desktop-home.png" /></p>
@@ -31,6 +31,9 @@ adb -s &quot;$TV&quot; shell am start -n com.gathin.tvhome/.MainActivity
 <p><strong>不要直接套用停用清单，不要卸载唯一可用的桌面。</strong> 如确需停用原厂桌面，必须先核对实际包名、备份、演练恢复，并设置独立的定时回退；原厂桌面已经停用时，升级 APK 前也必须有回退保护。断电重新上电和无需 ADB 的遥控器独立救援尚未在上述 Sony 设备上验证。</p>
 <p>发布 APK 当前使用调试证书签名，供 ADB 侧载验证。自行构建会使用你本机的调试签名，不一定能覆盖安装已有版本；不要为解决签名冲突而贸然卸载正在使用的唯一桌面。ADB 私钥、签名私钥和设备备份不随源码发布。</p>
 <h2>从源码构建</h2>
+<h3>独立 ADB 诊断助手</h3>
+<p>另提供适配 Android 4.4 起的 <a href="launcher/adb-helper/README.html">TV ADB 助手</a>：支持遥控器操作，检查调试属性、进程及本机 ADB 协议，提供受系统权限约束的开启尝试。它不替换桌面，也不能绕过权限保证开启 ADB；可通过 U 盘安装。下载及限制见该模块说明。</p>
+<h3>桌面与助手构建</h3>
 <p>需要 JDK 17、Android SDK platform 34 和 build-tools 34.0.0；Gradle Wrapper 已包含在仓库中。</p>
 <pre><code class="language-bash">git clone https://github.com/zzusec/tv-desktop.git
 cd tv-desktop/launcher
@@ -39,7 +42,7 @@ cd ..
 CLEANYOURTV_STRICT=1 python3 -m unittest discover -s tests -v
 </code></pre>
 <p>APK 位于 <code>launcher/app/build/outputs/apk/release/app-release.apk</code>。<code>JAVA_HOME</code> 和 <code>ANDROID_HOME</code> 应指向你本机的 JDK 与 SDK，不要提交 <code>launcher/local.properties</code>、ADB key、keystore 或电视状态备份。</p>
-<p>当前适配版本通过 64 项 JVM、18 项 Python、release 构建与 lint；lint 仍有既有警告。CI 同时检查构建、测试和 450 KiB 的 APK 体积预算。发现问题时请附机型、Android/固件版本和复现步骤，不要公开令牌、序列号或 ADB 密钥。</p>
+<p>桌面模块通过 64 项 JVM、仓库 18 项 Python、release 构建与 lint；独立 ADB 助手另通过 21 项 JVM、构建和 lint，但尚待电视端实机安装验证。lint 仍有警告。CI 同时检查构建、测试和桌面 450 KiB 的 APK 体积预算。发现问题时请附机型、Android/固件版本和复现步骤，不要公开令牌、序列号或 ADB 密钥。</p>
 <h2>许可与来源</h2>
 <p>本项目基于 <a href="https://github.com/Gathin23/cleanyourtv">Gathin23/CleanYourTV</a>，保留原作者署名和 Git 历史，以 <a href="LICENSE">MIT</a> 协议开源；不是 Sony 或其他电视厂商的官方产品。字体采用独立的 <a href="launcher/FONT-LICENSE-OFL.txt">SIL Open Font License</a>。</p>
 </main></body></html>
