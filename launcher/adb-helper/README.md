@@ -20,14 +20,31 @@
 
 本工具不执行 `su`，不调用 `ctl.start/stop/restart`，不关闭 `ro.adb.secure`，不清除 ADB 授权，不重启电视，不修改 USB functions、原桌面或系统分区，不提供提权或刷机能力。普通应用权限不足时只能诊断和引导进入原生设置，无法强行修复系统服务。
 
+## HTTP 读取诊断
+
+选择“开启 HTTP 日志”，电视会显示 `http://TV_IP:8765/<随机令牌>/`。同一可信局域网内的电脑打开完整地址，即可读取报告；在地址后加 `report.txt` 可获取 UTF-8 纯文本。HTTP 服务与 ADB 独立，ADB 服务停止时仍可用。
+
+- 默认关闭；仅在助手前台手动开启，离开助手或手动关闭即停止，不开机自启。
+- 页面只读，显示最近一次诊断与本次开启尝试的逐项结果，以及更新时间；在电视上选择“刷新诊断”或执行开启尝试后，电脑刷新页面获取新结果。HTTP 刷新本身不会执行系统操作或重新诊断。
+- 每次开启生成新访问令牌，不开放任意文件、系统命令、安装接口或远程开启 ADB 的接口。
+- 地址包含私有设备报告的访问凭据，不要公开。HTTP 不加密，只在可信局域网使用，不做公网端口映射。
+
+## 在线升级
+
+选择“检查更新”，通过固定的 GitHub HTTPS 元数据检查助手新版本。发现新版后先确认下载；下载完成后检查 SHA-256、包名、严格递增的版本号和与本机安装相同的签名证书，全部通过才允许请求系统安装。安装仍需电视端确认，不依赖 ADB，不静默安装或卸载旧版。
+
+Android 8 及以上如果未允许该助手安装应用，会引导进入系统“安装未知应用”授权页，返回后再次选择“安装已下载更新”。Android 4.4/4.4W 的安装器仅支持文件地址，因此会将已验证的 APK 复制到助手的外部存储专属更新目录，重新校验后交给系统；该路径需要可用的外部存储（可包含电视内置共享存储）。较旧固件可能需要在原生设置中允许侧载。外部存储在旧系统上并非私有区，安装器仍会核对已有应用签名；维护后可删除该更新 APK。网络、HTTPS 证书、安装权限或签名失败会明确显示错误，不会关闭 TLS 校验或降级版本。
+
+元数据位于 [`update.json`](update.json)，仅更新本助手，不会替换 TV Desktop。API 19 默认禁用的 TLS 1.2 会在连接中启用。API 19–23 对固定 GitHub 主机连接先使用系统证书库；旧证书库校验失败时，再使用内置的 ISRG Root X1 和 USERTrust ECC 两份公开根证书进行标准链验证，保留域名校验，不信任任意证书。电视网络、系统时间与固件的 TLS 兼容性仍须实机验证。无需自建服务；GitHub Release 提供 APK，仓库提供版本元数据。1.0 没有升级入口，首次到 1.1 仍需 U 盘覆盖安装一次，之后可在线升级。
+
 ## 下载与 U 盘安装
 
-下载入口：[TV ADB 助手 1.0](https://github.com/zzusec/tv-desktop/releases/tag/adb-helper-v1.0)。选择 `tv-adb-helper-1.0.apk` 并核对同页 `SHA256SUMS`，不要误装或卸载桌面 APK。
+下载入口：[TV ADB 助手 1.1](https://github.com/zzusec/tv-desktop/releases/tag/adb-helper-v1.1)。选择 `tv-adb-helper-1.1.apk` 并核对同页 `SHA256SUMS`，不要误装或卸载桌面 APK。
 
 1. 将 APK 放入 U 盘，插入电视，在电视文件管理器中打开 APK。
 2. 如系统阻止侧载，在原生设置中明确允许本次安装；不要关闭其他安全校验。
 3. 安装后从桌面应用列表打开“TV ADB 助手”。包名为 `com.zzusec.tvadbhelper`，不是桌面的包名。
-4. 先查看“刷新诊断”的结果，可用方向键进入报告区域向下滚动。需要协助时可拍摄报告；报告包含本机 IP，请勿公开敏感设备信息。
+4. 先查看“刷新诊断”的结果，可用方向键进入报告区域向下滚动。需要协助时可开启 HTTP 读取报告，或拍摄报告；报告包含本机 IP，请勿公开敏感设备信息。
 5. 点击“尝试开启网络 ADB”并阅读确认说明。若显示权限拒绝或仍无法连接，保留错误报告，不要把它当作已开启，不需要因此卸载桌面、恢复出厂或刷机。
 6. 如果报告出现 AUTH/CNXN，在可信局域网的电脑上执行下列验证；需要时在电视上允许该电脑的调试授权。维护完成后在系统设置关闭网络调试。
 
@@ -37,7 +54,7 @@ adb -s TV_IP:5555 shell id
 adb -s TV_IP:5555 shell getprop ro.product.device
 ```
 
-工具只做到本机地址的有界 TCP 探测，不上传报告，不提供 HTTP 服务，不后台常驻、不注册开机接收器。Android 4.4 上普通应用可能看不到全部进程，因此“未在可见列表找到 adbd”不等于服务一定不存在。
+工具不主动上传诊断；只在手动开启后通过带令牌的 HTTP 地址提供报告，不后台常驻、不注册开机接收器。检查更新会访问 GitHub，但不会上传诊断报告。Android 4.4 上普通应用可能看不到全部进程，因此“未在可见列表找到 adbd”不等于服务一定不存在。
 
 ## 构建与验证
 
@@ -50,13 +67,21 @@ cd launcher
 
 产物：`adb-helper/build/outputs/apk/release/adb-helper-release.apk`。发布包使用本地调试证书签名，与桌面分属不同包名；自行构建的证书可能不同，升级前核对签名。不要提交 keystore 或设备报告。
 
-本模块包含权限拒绝、静默写入失败、已有值伪成功、只在网卡监听、非 ADB 服务、报文截断/校验错误和超时的 JVM 测试。构建、lint、单元测试与 v1 签名校验不等于 API 19 电视实机验收；首版需 U 盘安装后核对实际 UI、权限结果和电脑端连接。
+本模块包含权限拒绝、静默写入失败、已有值伪成功、只在网卡监听、非 ADB 服务、报文截断/校验错误和超时，以及 HTTP 令牌、转义、请求边界、关闭和升级安全策略的 JVM 测试。构建、lint、单元测试与 v1 签名校验不等于 API 19 电视实机验收；首版需 U 盘安装后核对实际 UI、权限结果和电脑端连接。
 
-首版已通过 21 项 JVM 测试、release 构建和 lint（0 个错误、4 个警告）；桌面原有 64 项 JVM 和仓库 18 项 Python 回归也通过。APK 使用兼容 Android 4.4 的 v1 签名并同时通过 v2 校验。尚未在电视上安装，不宣称网络 ADB 已恢复。
+1.0 已在 Android 4.4 小米电视上运行并采集到真实诊断；这不代表已恢复 ADB。1.1 已通过 42 项助手 JVM 测试、release 构建和 lint（0 错误，4 项既有警告）；桌面 64 项 JVM 与仓库 18 项 Python 回归通过。API 21 模拟器已验证 HTTP 页面/文本报告、退出后关闭及 GitHub HTTPS 握手，构建和模拟器测试不能替代 Android 4.4 目标电视实测。发布 APK 保留兼容 Android 4.4 的 v1 签名和原证书，以便覆盖安装。
 
-## Android 4.4 权限依据
+## Android 4.4 权限与安装依据
 
 - [AOSP AndroidManifest.xml：WRITE_SECURE_SETTINGS](https://android.googlesource.com/platform/frameworks/base/+/android-4.4.4_r2/core/res/AndroidManifest.xml)
 - [AOSP SettingsProvider：Global/Secure 写入检查](https://android.googlesource.com/platform/frameworks/base/+/android-4.4.4_r2/packages/SettingsProvider/src/com/android/providers/settings/SettingsProvider.java)
 - [AOSP property_service.c：调用者身份和属性写权限](https://android.googlesource.com/platform/system/core/+/android-4.4.4_r2/init/property_service.c)
+- [AOSP PackageInstallerActivity：KitKat 支持的安装 URI](https://android.googlesource.com/platform/packages/apps/PackageInstaller/+/android-4.4.4_r2/src/com/android/packageinstaller/PackageInstallerActivity.java)
 - [AOSP adb.c：adbd 的 TCP 端口选择](https://android.googlesource.com/platform/system/core/+/android-4.4.4_r2/adb/adb.c)
+
+## 更新连接使用的公开根证书
+
+根证书只用于上述旧系统的助手更新连接，不修改电视系统证书库或其他应用。证书过期/轮换时需维护新版，不能通过忽略 TLS 错误解决。
+
+- ISRG Root X1：来自 [Let's Encrypt 官方 PEM](https://letsencrypt.org/certs/isrgrootx1.pem)，DER SHA-256：`96bcec06264976f37460779acf28c5a7cfe8a3c0aae11a8ffcee05c0bddf08c6`。
+- USERTrust ECC Certification Authority：与本机受信 CA 库及 [Sectigo 官方证书](http://crt.sectigo.com/USERTrustECCCertificationAuthority.crt) 双份比对一致，DER SHA-256：`4ff460d54b9c86dabfbcfc5712e0400d2bed3fbc4d4fbdaa86e06adcd2a9ad7a`。官方历史下载地址是 HTTP；证书身份不是仅凭这个下载通道认定，测试固定校验上述指纹、CA 属性与自签名。

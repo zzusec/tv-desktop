@@ -44,7 +44,7 @@ adb -s "$TV" shell am start -n com.gathin.tvhome/.MainActivity
 
 ### 独立 ADB 诊断助手
 
-另提供适配 Android 4.4 起的 [TV ADB 助手](launcher/adb-helper/README.md)：支持遥控器操作，检查调试属性、进程及本机 ADB 协议，提供受系统权限约束的开启尝试。它不替换桌面，也不能绕过权限保证开启 ADB；可通过 U 盘安装。下载及限制见该模块说明。
+另提供适配 Android 4.4 起的 [TV ADB 助手](launcher/adb-helper/README.md)：支持遥控器操作，检查调试属性、进程及本机 ADB 协议，提供受系统权限约束的开启尝试。它不替换桌面，也不能绕过权限保证开启 ADB；支持手动开启只读 HTTP 诊断页面与经哈希/签名校验的在线升级（电视确认安装）；1.0 首次升到 1.1 仍需 U 盘覆盖安装。下载及限制见该模块说明。
 
 ### 桌面与助手构建
 
@@ -60,7 +60,7 @@ CLEANYOURTV_STRICT=1 python3 -m unittest discover -s tests -v
 
 APK 位于 `launcher/app/build/outputs/apk/release/app-release.apk`。`JAVA_HOME` 和 `ANDROID_HOME` 应指向你本机的 JDK 与 SDK，不要提交 `launcher/local.properties`、ADB key、keystore 或电视状态备份。
 
-桌面模块通过 64 项 JVM、仓库 18 项 Python、release 构建与 lint；独立 ADB 助手另通过 21 项 JVM、构建和 lint，但尚待电视端实机安装验证。lint 仍有警告。CI 同时检查构建、测试和桌面 450 KiB 的 APK 体积预算。发现问题时请附机型、Android/固件版本和复现步骤，不要公开令牌、序列号或 ADB 密钥。
+桌面模块通过 64 项 JVM、仓库 18 项 Python、release 构建与 lint；独立 ADB 助手包含诊断、只读 HTTP 与升级安全策略测试；1.0 已在 Android 4.4 电视运行，新版 HTTP 和在线升级仍需目标电视实测。lint 仍有警告。CI 同时检查构建、测试和桌面 450 KiB 的 APK 体积预算。发现问题时请附机型、Android/固件版本和复现步骤，不要公开令牌、序列号或 ADB 密钥。
 
 ## 许可与来源
 

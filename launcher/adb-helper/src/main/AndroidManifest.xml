@@ -5,6 +5,7 @@
     <uses-feature android:name="android.hardware.screen.landscape" android:required="false" />
     <uses-feature android:name="android.software.leanback" android:required="false" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
     <!-- KitKat requires this alongside WSS; newer platforms may still deny it. -->
     <uses-permission android:name="android.permission.WRITE_SETTINGS"
         tools:ignore="ProtectedPermissions" />
@@ -19,6 +20,9 @@
         android:theme="@style/AppTheme"
         android:allowBackup="false"
         android:supportsRtl="true">
+        <provider android:name=".UpdateApkProvider"
+            android:authorities="com.zzusec.tvadbhelper.updates"
+            android:exported="false" android:grantUriPermissions="true" />
         <activity android:name=".MainActivity" android:exported="true"
             android:screenOrientation="landscape">
             <intent-filter>
